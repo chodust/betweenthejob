@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PurpleCareer - 새로운 커리어의 시작</title>
+  <style>
+    /* 은은한 보라색 테마 컬러 정의 */
+    :root {
+      --primary: #7C5CFC;          /* 메인 보라 */
+      --primary-light: #9A82FC;    /* 밝은 보라 */
+      --primary-soft: #F4F1FE;     /* 아주 은은한 보라색 배경 */
+      --primary-tint: #E8E2FD;     /* 부드러운 보라색 테두리/칩 */
+      --text-main: #2D264B;        /* 짙은 보라빛 차콜 텍스트 */
+      --text-sub: #6C6684;         /* 서브 회색 텍스트 */
+      --white: #FFFFFF;
+      --bg-gradient: linear-gradient(135deg, #FAF8FF 0%, #EDE8FD 100%);
+      --card-hover: 0 10px 25px rgba(124, 92, 252, 0.12);
+      --transition: all 0.25s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", Roboto, "Noto Sans KR", sans-serif;
+    }
+
+    body {
+      background-color: #FAF9FE;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    /* 네비게이션 헤더 */
+    header {
+      background-color: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--primary-tint);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--text-sub);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .nav-menu a:hover, .nav-menu a.active {
+      color: var(--primary);
+    }
+
+    .nav-actions .btn-post {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .nav-actions .btn-post:hover {
+      background-color: #6944e8;
+      box-shadow: 0 4px 12px rgba(124, 92, 252, 0.3);
+    }
+
+    /* 화면 전환을 위한 클래스 */
+    .page-section {
+      display: none;
+    }
+    .page-section.active {
+      display: block;
+    }
+
+    /* 히어로 섹션 */
+    .hero {
+      background: var(--bg-gradient);
+      padding: 60px 20px 50px;
+      text-align: center;
+      border-bottom: 1px solid var(--primary-tint);
+    }
+
+    .hero h1 {
+      font-size: 2.3rem;
+      margin-bottom: 12px;
+      color: var(--text-main);
+      font-weight: 800;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-sub);
+      margin-bottom: 40px;
+    }
+
+    /* 히어로 내부 좌우 반갈라 배치 컨테이너 */
+    .hero-split-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 30px;
+      align-items: stretch;
+    }
+
+    .split-box {
+      flex: 1;
+      background: var(--white);
+      border: 1px solid var(--primary-tint);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(124, 92, 252, 0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .split-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    /* 왼쪽: 지역별 필터 태그 영역 */
+    .region-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* 오른쪽: 직무 검색창 영역 */
+    .search-box-wrap {
+      display: flex;
+      background: var(--primary-soft);
+      padding: 6px;
+      border-radius: 30px;
+      border: 1px solid var(--primary-tint);
+    }
+
+    .search-box-wrap input {
+      flex: 1;
+      border: none;
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      border-radius: 30px;
+      outline: none;
+      background: transparent;
+      color: var(--text-main);
+    }
+
+    .search-box-wrap button {
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .search-box-wrap button:hover {
+      background-color: #6944e8;
+    }
+
+    /* 공통 태그/버튼 디자인 */
+    .tag-btn {
+      background: var(--white);
+      border: 1px solid var(--primary-tint);
+      color: var(--text-sub);
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .tag-btn:hover, .tag-btn.active {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* 메인 컨텐츠 영역 */
+    .content-container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .job-count {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    /* 채용 공고 카드 그리드 */
+    .job-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .job-card {
+      background: var(--white);
+      border: 1px solid rgba(124, 92, 252, 0.12);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .job-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary-light);
+      box-shadow: var(--card-hover);
+    }
+
+    .company-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .company-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--primary-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: var(--primary);
+      font-size: 1.1rem;
+      border: 1px solid var(--primary-tint);
+    }
+
+    .company-name {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+    }
+
+    .job-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .job-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.78rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .job-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px dashed var(--primary-tint);
+      padding-top: 14px;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+    }
+
+    .apply-btn {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* 이력서 입력 페이지 스타일 */
+    .resume-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .resume-form-box {
+      background: var(--white);
+      border: 1px solid var(--primary-tint);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 24px rgba(124, 92, 252, 0.05);
+    }
+
+    .resume-form-box h2 {
+      font-size: 1.6rem;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .resume-form-box p {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--primary-tint);
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      color: var(--text-main);
+      background: #FAF9FE;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--primary);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(124, 92, 252, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      height: 150px;
+    }
+
+    .submit-resume-btn {
+      width: 100%;
+      background-color: var(--primary);
+      color: var(--white);
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .submit-resume-btn:hover {
+      background-color: #6944e8;
+      box-shadow: 0 4px 12px rgba(124, 92, 252, 0.3);
+    }
+
+    /* 푸터 */
+    footer {
+      background-color: var(--white);
+      border-top: 1px solid var(--primary-tint);
+      padding: 40px 20px;
+      margin-top: 80px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .hero-split-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 헤더 -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo" onclick="switchPage('home')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        PurpleCareer
+      </a>
+      <ul class="nav-menu">
+        <li><a href="#" onclick="switchPage('home')" id="menuHome" class="active">채용공고</a></li>
+        <li><a href="#" onclick="switchPage('home')">기업탐색</a></li>
+        <li><a href="#" onclick="switchPage('resume')" id="menuResume">이력서 관리</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-post">공고 등록</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- [1] 홈 화면 (채용공고 + 지역필터 + 직무검색) -->
+  <div id="homePage" class="page-section active">
+    <!-- 히어로 & 반갈라 검색 섹션 -->
+    <section class="hero">
+      <h1>당신의 다음 여정을 찾아보세요</h1>
+      <p>은은하고 편안한 공간에서 새로운 기회를 발견해 보세요.</p>
+      
+      <div class="hero-split-container">
+        <!-- 왼쪽: 지역별 필터 -->
+        <div class="split-box">
+          <div class="split-title">📍 지역별 채용</div>
+          <div class="region-tags">
+            <button class="tag-btn active" onclick="filterRegion('all')">전체 지역</button>
+            <button class="tag-btn" onclick="filterRegion('서울')">서울</button>
+            <button class="tag-btn" onclick="filterRegion('경기')">경기</button>
+            <button class="tag-btn" onclick="filterRegion('인천')">인천</button>
+            <button class="tag-btn" onclick="filterRegion('원격')">원격근무</button>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 직무 검색 창 -->
+        <div class="split-box">
+          <div class="split-title">🔍 직무 및 기술 검색</div>
+          <div class="search-box-wrap">
+            <input type="text" id="searchInput" placeholder="예: 프론트엔드, React, 백엔드">
+            <button onclick="handleSearch()">검색</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 메인 채용공고 리스트 -->
+    <main class="content-container">
+      <div class="section-title">
+        <span>추천 채용 공고</span>
+        <span class="job-count" id="countText">총 4개 포지션</span>
+      </div>
+
+      <div class="job-list" id="jobGrid">
+        <!-- 카드 1 -->
+        <div class="job-card" data-region="서울" data-category="개발">
+          <div>
+            <div class="company-info">
+              <div class="company-logo">L</div>
+              <div class="company-name">라벤더랩스</div>
+            </div>
+            <h3 class="job-title">시니어 프론트엔드 개발자 (React/Next.js)</h3>
+            <div class="job-badges">
+              <span class="badge">경력 3~7년</span>
+              <span class="badge">원격근무 병행</span>
+              <span class="badge">React</span>
+            </div>
+          </div>
+          <div class="job-footer">
+            <span>서울 강남구 · 마감 14일 전</span>
+            <a href="#" class="apply-btn">지원하기 →</a>
+          </div>
+        </div>
+
+        <!-- 카드 2 -->
+        <div class="job-card" data-region="서울" data-category="디자인">
+          <div>
+            <div class="company-info">
+              <div class="company-logo">V</div>
+              <div class="company-name">바이올렛 스튜디오</div>
+            </div>
+            <h3 class="job-title">프로덕트 디자이너 (UI/UX)</h3>
+            <div class="job-badges">
+              <span class="badge">경력 2년 이상</span>
+              <span class="badge">자율출퇴근</span>
+              <span class="badge">Figma</span>
+            </div>
+          </div>
+          <div class="job-footer">
+            <span>서울 성동구 · 상시 채용</span>
+            <a href="#" class="apply-btn">지원하기 →</a>
+          </div>
+        </div>
+
+        <!-- 카드 3 -->
+        <div class="job-card" data-region="경기" data-category="개발">
+          <div>
+            <div class="company-info">
+              <div class="company-logo">P</div>
+              <div class="company-name">퍼플핀테크</div>
+            </div>
+            <h3 class="job-title">백엔드 엔지니어 (Spring / Kotlin)</h3>
+            <div class="job-badges">
+              <span class="badge">신입 / 경력 무관</span>
+              <span class="badge">스톡옵션 제공</span>
+              <span class="badge">Kotlin</span>
+            </div>
+          </div>
+          <div class="job-footer">
+            <span>경기 성남시 분당구 · D-5</span>
+            <a href="#" class="apply-btn">지원하기 →</a>
+          </div>
+        </div>
+
+        <!-- 카드 4 -->
+        <div class="job-card" data-region="서울" data-category="기획/PM">
+          <div>
+            <div class="company-info">
+              <div class="company-logo">C</div>
+              <div class="company-name">클라우드나인</div>
+            </div>
+            <h3 class="job-title">B2B SaaS 서비스 기획자 / PO</h3>
+            <div class="job-badges">
+              <span class="badge">경력 4년 이상</span>
+              <span class="badge">식대 무제한</span>
+              <span class="badge">Agile</span>
+            </div>
+          </div>
+          <div class="job-footer">
+            <span>서울 서초구 · 마감 21일 전</span>
+            <a href="#" class="apply-btn">지원하기 →</a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- [2] 이력서 관리(입력) 페이지 화면 -->
+  <div id="resumePage" class="page-section">
+    <div class="resume-container">
+      <div class="resume-form-box">
+        <h2>이력서 작성 및 관리</h2>
+        <p>PurpleCareer에 이력서를 등록하고 매력적인 포지션에 쉽게 지원해 보세요.</p>
+        
+        <form onsubmit="saveResume(event)">
+          <div class="form-group">
+            <label for="resumeTitle">이력서 제목</label>
+            <input type="text" id="resumeTitle" placeholder="예: 5년 차 프론트엔드 개발자 이력서입니다." required>
+          </div>
+
+          <div class="form-group">
+            <label for="userName">이름</label>
+            <input type="text" id="userName" placeholder="홍길동" required>
+          </div>
+
+          <div class="form-group">
+            <label for="userEmail">이메일 연락처</label>
+            <input type="email" id="userEmail" placeholder="example@purple.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="techStack">보유 기술 및 스택</label>
+            <input type="text" id="techStack" placeholder="예: React, TypeScript, Node.js" required>
+          </div>
+
+          <div class="form-group">
+            <label for="introduction">자기소개 및 주요 경력 요약</label>
+            <textarea id="introduction" placeholder="본인의 강점, 주요 프로젝트 경험, 업무 성과 등을 자유롭게 작성해주세요." required></textarea>
+          </div>
+
+          <button type="submit" class="submit-resume-btn">이력서 저장하기</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 푸터 -->
+  <footer>
+    <p>© 2026 PurpleCareer Inc. 모든 권리 보유.</p>
+    <p style="margin-top: 6px; color: #9A82FC;">은은한 퍼플 톤의 감각적인 채용 플랫폼</p>
+  </footer>
+
+  <script>
+    // 화면 전환 함수 (SPA 방식)
+    function switchPage(pageName) {
+      const homePage = document.getElementById('homePage');
+      const resumePage = document.getElementById('resumePage');
+      const menuHome = document.getElementById('menuHome');
+      const menuResume = document.getElementById('menuResume');
+
+      if (pageName === 'home') {
+        homePage.classList.add('active');
+        resumePage.classList.remove('active');
+        menuHome.classList.add('active');
+        menuResume.classList.remove('active');
+        window.scrollTo(0, 0);
+      } else if (pageName === 'resume') {
+        homePage.classList.remove('active');
+        resumePage.classList.add('active');
+        menuHome.classList.remove('active');
+        menuResume.classList.add('active');
+        window.scrollTo(0, 0);
+      }
+    }
+
+    // 이력서 저장 시뮬레이션 함수
+    function saveResume(e) {
+      e.preventDefault();
+      alert('이력서가 성공적으로 저장되었습니다!');
+      switchPage('home');
+    }
+
+    // 지역별 태그 필터링 기능
+    function filterRegion(region) {
+      const buttons = document.querySelectorAll('.hero-split-container .tag-btn');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const cards = document.querySelectorAll('.job-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardRegion = card.dataset.region;
+        const cardText = card.textContent;
+        
+        if (region === 'all' || cardRegion === region || (region === '원격' && cardText.includes('원격'))) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('countText').textContent = `총 ${visibleCount}개 포지션`;
+    }
+
+    // 오른쪽 키워드 직무 검색 기능
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.job-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('countText').textContent = `검색결과: 총 ${visibleCount}개`;
+    }
+
+    // 직무 검색창 엔터키 입력 시 실행
+    document.getElementById('searchInput').addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') handleSearch();
+    });
+  </script>
+</body>
+</html>
